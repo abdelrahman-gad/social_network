@@ -8,8 +8,9 @@ use Auth;
 use Session;
 use Image;
 use App\Category;
+use App\Comment;
 use Storage;
-
+use App\Notification;
 class PostController extends Controller
 {
     /**
@@ -48,19 +49,19 @@ class PostController extends Controller
 if ($request->hasFile('image')) {
 
     $img=  Image::make($request->file('image'));
-    
+
         //get the name of image to use it again storing in database
-    
+
       $imgName=$request->file('image')->getClientOriginalName();
 
       $img->resize(500,null,function($ratio)
       {
         $ratio->aspectRatio();
       });
-     
+
       $img->save(public_path('post_img/'.$imgName),60);
-      
-      
+
+
 
             // $image = $request->file('image');
             // $filename = time() . '.' . $image->getClientOriginalExtension();
@@ -70,7 +71,7 @@ if ($request->hasFile('image')) {
         }
 
         $post->image=$imgName;
-        // saving posts after validation 
+        // saving posts after validation
         $post->save();
         if (isset($request->tags)) {
             $post->friends()->sync($request->tags, false);
@@ -89,7 +90,9 @@ if ($request->hasFile('image')) {
     public function show($id)
     {
         $post = Post::find($id);
-        return view('post.show')->withPost($post);
+        $comments=Comment::all()->where('post_id',$post->id);
+
+        return view('post.show',['post'=>$post,'comments'=>$comments]);
     }
 
     /**
@@ -140,7 +143,7 @@ if ($request->hasFile('image')) {
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('/images/' . $filename);
+            $location = public_path('post_img/' . $filename);
             Image::make($image)->resize(800, 600)->save($location);
             if ($post->image != null) {
                 Storage::delete($post->image);

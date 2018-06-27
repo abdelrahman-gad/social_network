@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-
+use App\Comment;
 class HomeController extends Controller
 {
     /**
@@ -24,7 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+       $comments=Comment::all();
+
+        return view('home',['commnets'=>$comments]);
     }
     public function listUser() {
         $users = User::orderBy('id', 'desc')->paginate(40);

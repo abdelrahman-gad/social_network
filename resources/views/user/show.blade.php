@@ -56,7 +56,12 @@
                                   <div class="panel-body">
                                     {{ $post->body }}
                                     <br />
-                                    Category: <div class="badge">{{ $post->category->name }}</div>
+                                    Ctegory : <div class="badge">
+                                      <a  href="/social/public/post/category/{{$post->category_id}}" class="badge">
+                                   {{ $post->category['name']  }}
+
+
+                                   </a></div>
                                   </div>
                                 </div>
                             @endforeach
@@ -76,7 +81,7 @@
                       </div>
                   </div>
                 </div>
-           
+
                 @endforeach
                         </div>
                         <!-- Comments ends  -->
@@ -85,7 +90,12 @@
                             @foreach ($user->categories as $category)
                                 <div class="panel panel-default">
                                   <div class="panel-body">
-                                    {{ $category->name }}
+                                    Ctegory : <div class="badge">
+                                      <a  href="/social/public/post/category/{{$post->category_id}}" class="badge">
+                                   {{ $post->category['name']  }}
+
+
+                                   </a></div>
                                   </div>
                                 </div>
                             @endforeach
@@ -122,7 +132,12 @@
                                             <img src="/images/{{ $like->post->image }}" alt="Image" width="100%" height="600">
                                         @endif
                                         <br />
-                                        Category: <div class="badge">{{ $like->post->category->name }}</div>
+                                        Ctegory : <div class="badge">
+                                          <a  href="/social/public/post/category/{{$post->category_id}}" class="badge">
+                                       {{ $post->category['name']  }}
+
+
+                                       </a></div>
                                       </div>
                                       <div class="panel-footer" data-postid="{{ $like->post->id }}">
                                         <a href="#" class="btn btn-link like active-like">Like <span class="badge">{{ $like->post->likes()->where('like', '=', true)->count() }}</span></a>
@@ -135,7 +150,7 @@
                         </div>
 
                      <!--start tag  -->
-                   
+
                 <!-- end tag  -->
                       </div>
                     </div>

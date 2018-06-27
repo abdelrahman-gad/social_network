@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('id', 'desc')->paginate(10);
+        $categories = Category::orderBy('id', 'desc')->get();
        return view('category.index')->withCategories($categories);
     }
 
@@ -42,13 +42,13 @@ class CategoryController extends Controller
     //  $this-validate($request,
     //  [
     //      'name'=>'required|unique:categories|max:255'
-    //  ]); 
+    //  ]);
     //     $category=new Category;
     //     $category->name = strtolower($request->name);
     //     $category->user_id=Auth::user()->id;
     //     $category->save();
     //     Session::flash('success','Category is added successfully');
-        
+
     //     return redirect('/category');
 
 
@@ -69,9 +69,9 @@ class CategoryController extends Controller
     }
 
 
-public function showAll($name)
+public function showAll($id)
 {
- $category=Category::all()->where('name','=',$name)->first();
+ $category=Category::all()->where('id','=',$id)->first();
 if($category != null)
 {
     $posts=Post::all()->where('category_id','=',$category->id)->sortByDesc('id');
@@ -90,7 +90,7 @@ return redirect('/post');
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-  
+
     public function show($id)
     {
         //

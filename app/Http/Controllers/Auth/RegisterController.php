@@ -6,7 +6,8 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-
+use Intervention\Image\Facades\Image;
+use File;
 class RegisterController extends Controller
 {
     /*
@@ -47,14 +48,15 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-
-      dd($data);
+      
         return Validator::make($data, [
-            'username' => 'required|string|max:255|unique:users',
+            'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'bio' => 'required|min:6'
+            'bio' => 'required|min:6',
+            'image' => 'file|required',
         ]);
+       
     }
 
     /**
@@ -65,12 +67,32 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+
+             $img=  Image::make($data['image']);
+        
+        
+              //get the name of image to use it again storing in database
+        
+              $imgName = $data['image']->getClientOriginalName();
+        
+        
+        
+              // modifing and customizing my image (resizing , archiving)
+              $img->resize(500,null,function($ratio)
+              {
+              $ratio->aspectRatio();
+              });
+              // save the image in the directory which i need
+                  $img->save(public_path('user_imgs/'.$imgName));
+        
+        
+        return User::create([ 
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'profile_picture' =>'http://gravatar.com/avatar/'.md5(strtolower(trim($data['email']))).'?id=monsterid',
+            'image' => $imgName,
             'bio' => $data['bio'],
+            
         ]);
     }
 }

@@ -8,7 +8,7 @@
     {{  Session::get("success") }}
     </div>
     @endif
-    
+
   {!! Form::model($post,['method'=>'PUT' ,'files'=>true ])  !!}
       {{csrf_field()}}
     <div class="panel panel-default">
@@ -19,11 +19,11 @@
                     <small class="text-danger">{{ $errors->first('title') }}</small>
                 @endif
             </div>
-                        
+
             <div class="form-group">
             <input type="file"   name="image">
             </div>
-                        
+
             <div class="form-group {{ $errors->has('body') ? 'has-error' : '' }}">
             {{ Form::textarea('body',null,['class'=>'form-control','placeholder'=>'Enter Post pls'] )}}
             @if ($errors->has('body'))
@@ -31,11 +31,11 @@
             @endif
           </div>
 
-                      
+
           <div class="form-group">
           <select class="form-control" name="category">
               @foreach ($categories as $category)
-                  <option value="{{ $category->id }}" {{ $category->id == $post->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
+                  <option value="{{ $category->id }} {{ $category->id == $post->category_id ? 'selected' : '' }}">{{ $category->name }}</option>
               @endforeach
           </select>
         </div>

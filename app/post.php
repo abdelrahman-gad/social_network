@@ -24,5 +24,8 @@ class Post extends Model
     {
         return $this->hasMany('App\Comment');
     }
-
+    public function replies()
+    {
+         return $this->hasMany('App\Reply');
+    }
 }

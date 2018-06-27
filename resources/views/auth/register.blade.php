@@ -8,7 +8,8 @@
                 <div class="panel-heading">Register</div>
 
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
+                {!! Form::open(['method'=>'post','route'=>'register','files'=>'true','class'=>'form-horizontal' ]);  !!}
+                  
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -73,7 +74,13 @@
                                     </span>
                                 @endif
                         </div>
+                        <div class="form-group">
+                            <label for="profile_picture" class="col-md-4 control-label">User image</label>
 
+                            <div class="col-md-6">
+                            {!! Form::file('image',null,['class'=>'form-control','style'=>'margin-left:40px;']) !!}
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
@@ -81,7 +88,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                        {!! Form::close() !!}
                 </div>
             </div>
         </div>

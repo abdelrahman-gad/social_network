@@ -11,9 +11,11 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css+">
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css+">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <meta id="token" name="token" content="{{ csrf_token() }}">
 <style type="text/css" media="screen">
 
 tfoot input {
@@ -32,9 +34,15 @@ tfoot input {
 {
     word-break: break-all;
 }
+.img{
+    margin-left:100px;
+    }
+.unread{
+  background-color: #e5e5e5;
+}
 
 </style>
-
+  @yield('head')
 </head>
 <body>
     <div id="app">
@@ -69,15 +77,27 @@ tfoot input {
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                              Notifications {{count(auth()->user()->unreadNotifications)}}  <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                         @foreach( auth()->user()->notifications as $note)
+                              <li>  <a href="{{ route('post.show', [$note->data['post_id']]) }}"  class="{{$note->read_at == null ? 'unread':''}}" >  {!! App\User::find($note->data['commenter'])->username   !!}  {!!   $note->data['formula']   !!}</a>  </li>
+                              <?php $note->markAsRead();  ?>
+                          @endforeach
+                            </ul>
+                        </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->username }} <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                  <li> <a href=" {{url('/home')}} ">Profile </a></li>
-                                  <li> <a href=" {{url('/post')}} ">Post</a> </li>
-                                  <li> <a href=" {{url('/category')}} ">Category</a> </li>
+                                  <li> <a href=" {{url('/home')}} ">My Profile</a></li>
+                                  <li> <a href=" {{url('/post')}} ">Posts</a> </li>
+                                  <li> <a href=" {{url('/category')}} ">Categories</a> </li>
                                    <li> <a href=" {{url('/users')}} ">Users</a> </li>
 
                                       <li>
@@ -93,6 +113,9 @@ tfoot input {
                                     </li>
                                 </ul>
                             </li>
+
+
+
                         @endif
                     </ul>
                 </div>
@@ -103,10 +126,34 @@ tfoot input {
     </div>
 
     <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
     <script src="{{ asset('js/app.js') }}"></script>
     <script type="text/javascript">
+{{--
+// likes
+
+// $('.like').click(function(e){
+//  e.preventDefault();
+//  console.log(e);
+//  var Like= e.target.previousElementSibling == null;
+//  var postid= e.target.parentNode.dataset['postid'];
+
+//  var data={
+//    islLike: Like,
+//    user_id: {{ Auth::user()->id }},
+//    post_id: postid
+//  }
+
+
+// axios.post('/like', data ).then( response => {
+//     console.log(response['data']);
+//    })
+//  });
+
 
  //jquery of add friend link
+ --}}
 $('.friend').click(function(e) {
     e.preventDefault();
     var friendid = e.target.parentNode.dataset['friendid'];
@@ -116,12 +163,12 @@ $('.friend').click(function(e) {
     axios.post('/friend', data).then(response => {
         e.target.innerHTML = "Remove Friend";
         e.currentTarget.className = "btn btn-link remove-friend";
-    })
+    });
 })
 
 
     </script>
 
-
+@yield('footer')
 </body>
 </html>

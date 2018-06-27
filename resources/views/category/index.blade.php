@@ -12,7 +12,7 @@
             @foreach ($categories as $category)
             <div class="panel panel-default">
             <div class="panel-body">
-                {{ $category->name }}
+                <a href=" {{route('category.showAll',[$category->id] ) }}  "> {{ $category->name }}</a>
             </div>
             <div class="panel-footer">
                 <small>Created by {{ $category->user->username }}</small>
@@ -41,4 +41,3 @@
 
 
 @endsection
-

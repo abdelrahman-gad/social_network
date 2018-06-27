@@ -2,13 +2,13 @@
 
 @section('content')
     <div class="container">
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="col-sm-8 col-sm-offset-2">
             @foreach ($posts as $post)
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
                         Created by {{ $post->user['username'] }}, {{ $post->title }},
-                      
+
                         <div class="pull-right">
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -33,10 +33,15 @@
                   <div class="panel-body">
                     {{ $post->body }}
                     @if ($post->image != null)
-                        <img src="/images/{{ $post->image }}" alt="Image" width="100%" height="600">
+                        <img  src="{{Request::root().'/post_img/'.$post->image }}" alt="Image" width="100%" height="600">
                     @endif
                     <br />
-                    Category: <div class="badge">{{ $post->category->name }}</div>
+                    Ctegory : <div class="badge">
+                      <a  href="/social/public/post/category/{{$post->category_id}}"  class="badge">
+                   {{ $post->category['name']  }}
+
+
+                   </a></div>
                   </div>
                   <div class="panel-footer" data-postid="{{ $post->id }}">
                       @php
@@ -67,7 +72,7 @@
                           <a href="#" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
                           <a href="#" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
                       @endif
-                      <a href="{{ route('post.show', [$post->id]) }}" class="btn btn-link">Comment</a>
+                   <a href="{{ route('post.show', [$post->id]) }}" class="btn btn-link">Comments <span class="badge"> {{ $post->comments->count() }}</span></a>
                   </div>
                 </div>
             @endforeach
