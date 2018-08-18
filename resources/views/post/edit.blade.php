@@ -8,7 +8,6 @@
     {{  Session::get("success") }}
     </div>
     @endif
-
   {!! Form::model($post,['method'=>'PUT' ,'files'=>true ])  !!}
       {{csrf_field()}}
     <div class="panel panel-default">
@@ -30,8 +29,6 @@
                 <small class="text-danger">{{ $errors->first('body') }}</small>
             @endif
           </div>
-
-
           <div class="form-group">
           <select class="form-control" name="category">
               @foreach ($categories as $category)
@@ -39,14 +36,9 @@
               @endforeach
           </select>
         </div>
-          <input type="submit" class="btn btn-primary btn-block">
+         <input type="submit" class="btn btn-primary btn-block">
       </div>
     </div>
-
-
    {!! Form::close() !!}
-
-
 </div>
-
 @endsection

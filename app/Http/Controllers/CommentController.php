@@ -52,17 +52,17 @@ class CommentController extends Controller
          'comment'=>'required|max:255'
 
          ]);
-     $post=Post::find($request->post_id);
+        $post=Post::find($request->post_id);
 
-     $comment =new Comment;
-     $comment->comment = $request->comment;
-     $comment->user_id = Auth::user()->id;
-     $comment->post_id = $request->post_id;
-     $user = User::find($post->user_id);
-     $comment->save();
-     $user->notify(new CommentOnPost($comment));
-     Session::flash('success',' You commented on this post ');
-     return redirect()->back();
+        $comment =new Comment;
+        $comment->comment = $request->comment;
+        $comment->user_id = Auth::user()->id;
+        $comment->post_id = $request->post_id;
+        $user = User::find($post->user_id);
+        $comment->save();
+        //$user->notify(new CommentOnPost($comment));
+        Session::flash('success',' You commented on this post ');
+        return redirect()->back();
     }
 
     /**

@@ -52,18 +52,18 @@ class ReplyController extends Controller
 
        ]);
 
-   $reply =new Reply;
-   $reply->reply=$request->reply;
-   $reply->user_id=Auth::user()->id;
-   $reply->post_id=$request->post_id;
-   $reply->comment_id=$request->comment_id;
+            $reply =new Reply;
+            $reply->reply=$request->reply;
+            $reply->user_id=Auth::user()->id;
+            $reply->post_id=$request->post_id;
+            $reply->comment_id=$request->comment_id;
 
 
-   $reply->save();
-   $user = User::find($reply->comment->user_id);
-   $user->notify(new ReplyOnComment($reply));
-   Session::flash('success',' replied on this comment successfully ');
-   return redirect()->back();
+            $reply->save();
+            $user = User::find($reply->comment->user_id);
+            // $user->notify(new ReplyOnComment($reply));
+            Session::flash('success',' replied on this comment successfully ');
+            return redirect()->back();
     }
 
     /**

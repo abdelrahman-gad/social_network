@@ -7,8 +7,12 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
-                        Created by {{ $post->user['username'] }}, {{ $post->title }},
-
+                         <a href="{{route('posts.show',[$post->id])}}"> {{ $post->title }} </a> 
+                    @if(auth()->user()->id == $post->user_id )
+                        <span style="margin-left:350px;"> Created by  <a href="{{ route('home') }}">{{ $post->user['username'] }} </a></span>    
+                        @else
+                        <span style="margin-left:350px;"> Created by  <a href="{{ route('users.show',[$post->user['id']]) }}"> {{ $post->user['username'] }} </a></span>    
+                        @endif
                         <div class="pull-right">
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -16,12 +20,12 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('post.show', [$post->id]) }}">Show Post</a></li>
+                                    <li><a href="{{ route('posts.show', [$post->id]) }}">Show Post</a></li>
                                     @if($post->user_id == Auth::user()->id)
-                                    <li><a href="{{ route('post.edit', [$post->id]) }}">Edit Post</a></li>
+                                    <li><a href="{{ route('posts.edit', [$post->id]) }}">Edit Post</a></li>
                                     <li>
                                         <a href="#" onclick="document.getElementById('delete').submit()">Delete Post</a>
-                                        {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['post.delete', $post->id]]) !!}
+                                        {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['posts.delete', $post->id]]) !!}
                                         {!! Form::close() !!}
                                     </li>
                                     @endif
@@ -37,10 +41,8 @@
                     @endif
                     <br />
                     Ctegory : <div class="badge">
-                      <a  href="/social/public/post/category/{{$post->category_id}}"  class="badge">
-                   {{ $post->category['name']  }}
-
-
+                      <a   href="{{route('categories.showAll',$post->category_id)}}"  class="badge">
+                          {{ $post->category['name']  }}
                    </a></div>
                   </div>
                   <div class="panel-footer" data-postid="{{ $post->id }}">
@@ -72,7 +74,7 @@
                           <a href="#" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
                           <a href="#" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
                       @endif
-                   <a href="{{ route('post.show', [$post->id]) }}" class="btn btn-link">Comments <span class="badge"> {{ $post->comments->count() }}</span></a>
+                   <a href="{{ route('posts.show', [$post->id]) }}" class="btn btn-link">Comments <span class="badge"> {{ $post->comments->count() }}</span></a>
                   </div>
                 </div>
             @endforeach

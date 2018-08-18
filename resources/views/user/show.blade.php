@@ -7,14 +7,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        <img src="{{ $user->profile_picture }}" alt="">
+                        <img src="{{ $user->image }}" alt="user image">
                       {{ $user->username }}
                     <div class="pull-right"  data-friendid=" {{$user->id}} " >
                     	<a href="" class="btn btn-link friend">Add Friend</a>
                     	<a href="#" class="btn btn-link">ViewFriend</a>
-
                     </div>
-
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -29,11 +27,11 @@
                       <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active fade in" id="posts">
                             {{ $user->posts()->count() }} Posts created
-                            @foreach ($user->posts as $post)
+                             @foreach ($user->posts as $post)
                                 <div class="panel panel-default">
                                   <div class="panel-heading">
                                     <h3 class="panel-title">
-                                        {{ $post->title }}
+                                      <a href="{{route('posts.show',[$post->id])}}"> {{ $post->title }} </a>   
                                         <div class="pull-right">
                                             <div class="dropdown">
                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -41,13 +39,15 @@
                                                 </a>
 
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <li><a href="{{ route('post.show', [$post->id]) }}">Show Post</a></li>
-                                                    <li><a href="{{ route('post.edit', [$post->id]) }}">Edit Post</a></li>
+                                                    <li><a href="{{ route('posts.show', [$post->id]) }}">Show Post</a></li>
+                                                @if(auth()->user()->id==$post->user_id)
+                                                    <li><a href="{{ route('posts.edit', [$post->id]) }}">Edit Post</a></li>
                                                     <li>
                                                         <a href="#" onclick="document.getElementById('delete').submit()">Delete Post</a>
                                                         {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['post.delete', $post->id]]) !!}
                                                         {!! Form::close() !!}
                                                     </li>
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </div>
@@ -57,7 +57,7 @@
                                     {{ $post->body }}
                                     <br />
                                     Ctegory : <div class="badge">
-                                      <a  href="/social/public/post/category/{{$post->category_id}}" class="badge">
+                                      <a  href="{{route('categories.showAll',$post->category_id)}}"  class="badge">
                                    {{ $post->category['name']  }}
 
 
@@ -69,20 +69,18 @@
                         <!-- comments starts -->
                         <div role="tabpanel" class="tab-pane fade" id="comments">
                             {{ $user->comments()->count() }} Commments created
-                   @foreach($user->comments as $comment )
-
-                <div class="panel panel-default" style="margin: 0; border-radius: 0;">
-                  <div class="panel-body">
-                      <div class="col-sm-9">
-                          {{ $comment->comment  }}
-                      </div>
-                      <div class="col-sm-3">
-                          <small> <a href=" {{route('post.show',[$comment->post->id])}} ">View Post </a> </small>
-                      </div>
-                  </div>
-                </div>
-
-                @endforeach
+                                @foreach($user->comments as $comment )
+                                        <div class="panel panel-default" style="margin: 0; border-radius: 0;">
+                                        <div class="panel-body">
+                                            <div class="col-sm-9">
+                                                {{ $comment->comment  }}
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <small> <a href=" {{route('posts.show',[$comment->post->id])}} ">View Post </a> </small>
+                                            </div>
+                                        </div>
+                                        </div>
+                                @endforeach
                         </div>
                         <!-- Comments ends  -->
                         <div role="tabpanel" class="tab-pane fade" id="categories">
@@ -91,7 +89,7 @@
                                 <div class="panel panel-default">
                                   <div class="panel-body">
                                     Ctegory : <div class="badge">
-                                      <a  href="/social/public/post/category/{{$post->category_id}}" class="badge">
+                                      <a  href="{{route('categories.showAll',$post->category_id)}}" class="badge">
                                    {{ $post->category['name']  }}
 
 
@@ -114,11 +112,11 @@
                                                     </a>
 
                                                     <ul class="dropdown-menu" role="menu">
-                                                        <li><a href="{{ route('post.show', [$like->post->id]) }}">Show Post</a></li>
-                                                        <li><a href="{{ route('post.edit', [$like->post->id]) }}">Edit Post</a></li>
+                                                        <li><a href="{{ route('posts.show', [$like->post->id]) }}">Show Post</a></li>
+                                                        <li><a href="{{ route('posts.edit', [$like->post->id]) }}">Edit Post</a></li>
                                                         <li>
                                                             <a href="#" onclick="document.getElementById('delete').submit()">Delete Post</a>
-                                                            {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['post.delete', $like->post->id]]) !!}
+                                                            {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['posts.delete', $like->post->id]]) !!}
                                                             {!! Form::close() !!}
                                                         </li>
                                                     </ul>
@@ -131,9 +129,9 @@
                                         @if ($like->post->image != null)
                                             <img src="/images/{{ $like->post->image }}" alt="Image" width="100%" height="600">
                                         @endif
-                                        <br />
+                                        <br/>
                                         Ctegory : <div class="badge">
-                                          <a  href="/social/public/post/category/{{$post->category_id}}" class="badge">
+                                          <a href="{{route('categories.showAll',$post->category_id)}}"   class="badge">
                                        {{ $post->category['name']  }}
 
 
@@ -142,16 +140,12 @@
                                       <div class="panel-footer" data-postid="{{ $like->post->id }}">
                                         <a href="#" class="btn btn-link like active-like">Like <span class="badge">{{ $like->post->likes()->where('like', '=', true)->count() }}</span></a>
                                         <a href="#" class="btn btn-link like">Dislike <span class="badge">{{ $like->post->likes()->where('like', '=', false)->count() }}</a>
-                                         <a href="{{ route('post.show', [$like->post->id]) }}" class="btn btn-link">Comment</a>
+                                         <a href="{{ route('posts.show', [$like->post->id]) }}" class="btn btn-link">Comment</a>
                                       </div>
                                     </div>
                                 @endif
                             @endforeach
                         </div>
-
-                     <!--start tag  -->
-
-                <!-- end tag  -->
                       </div>
                     </div>
                 </div>

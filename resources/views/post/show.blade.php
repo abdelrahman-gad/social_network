@@ -76,7 +76,7 @@
                 <br>
                 <br>
                 Ctegory : <div class="badge">
-                  <a  href="/social/public/post/category/{{$post->category_id}}" class="badge" >
+                  <a  href="{{route('categories.showAll',$post->category_id)}}"  class="badge" >
                {{ $post->category['name']  }}
 
 
@@ -95,24 +95,24 @@
                                   @foreach (Auth::user()->likes as $like)
                                       @if ($like->post_id == $post->id)
                                           @if ($like->like)
-                                              <a href="/social/public/like/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like active-like">Like <span class="badge">{{ $likeCount }}</span></a>
-                                              <a  href="/social/public/dislike/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
+                                              <a   href="{{route('addlike',[$post->id,Auth::user()->id])}}" class="btn btn-link like active-like">Like <span class="badge">{{ $likeCount }}</span></a>
+                                              <a   href="{{route('dislike',[$post->id,Auth::user()->id])}}" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
                                           @else
-                                              <a href="/social/public/like/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
-                                              <a  href="/social/public/dislike/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like active-like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
+                                              <a  href="{{route('addlike',[$post->id,Auth::user()->id])}}" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
+                                              <a   href="{{route('dislike',[$post->id,Auth::user()->id])}}" class="btn btn-link like active-like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
                                           @endif
                                           @break
                                       @elseif ($i == $c)
-                                          <a href="/social/public/like/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
-                                          <a href="/social/public/dislike/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
+                                          <a  href="{{route('addlike',[$post->id,Auth::user()->id])}}" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
+                                          <a  href="{{route('dislike',[$post->id,Auth::user()->id])}}" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
                                       @endif
                                       @php
                                           $c++;
                                       @endphp
                                   @endforeach
                                   @if ($i == 0)
-                                      <a href="/social/public/like/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
-                                      <a  href="/social/public/dislike/{{$post->id}}/{{Auth::user()->id}}" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
+                                      <a  href="{{route('addlike',[$post->id,Auth::user()->id])}}" class="btn btn-link like">Like <span class="badge">{{ $likeCount }}</span></a>
+                                      <a   href="{{route('dislike',[$post->id,Auth::user()->id])}}" class="btn btn-link like">Dislike <span class="badge">{{ $dislikeCount }}</span></a>
                                   @endif
                               @else
                                   <a href="{{ url('login') }}" class="btn btn-link">Like <span class="badge">{{ $likeCount }}</span></a>
@@ -131,10 +131,10 @@
                       <div class="col-sm-9">
                         <p class="comment-content">  {{ $comment->comment  }} </p>
                             @if($comment->user_id == Auth::user()->id)
-                            <small class="pull-right" > Commented by <a href="/social/public/home">{{ $comment->user['username'] }} </a> </small>
+                            <small class="pull-right" > Commented by <a href="{{route('home')}}">{{ $comment->user['username'] }} </a> </small>
 
                             @else
-                            <small class="pull-right" > Commented by <a href="/social/public/users/{{$comment->user_id}}">{{ $comment->user['username'] }} </a> </small>
+                            <small class="pull-right" > Commented by <a href="{{route('users.show',$comment->user_id)}}" >{{ $comment->user['username'] }} </a> </small>
 
                             @endif
 
@@ -147,7 +147,7 @@
             <i  class="fa fa-pencil"></i>
           </span>
           <a class=" btn btn-danger btn-sm" href="#" onclick="document.getElementById('delete').submit()">  <i class="fa fa-trash" >
-            {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['comment.delete', $comment->id]]) !!}
+            {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['comments.delete', $comment->id]]) !!}
             {!! Form::close() !!}
 
             </i></a>
@@ -162,7 +162,7 @@
                     <br>
 
           <div  id="{{$comment->id+$post->id}}"  class="edit-comment-form">
-              {!! Form::open(['method'=>'PUT' ,'route' => ['comment.update', $comment->id] ,'style'=>'display:flex' ])  !!}
+              {!! Form::open(['method'=>'PUT' ,'route' => ['comments.update', $comment->id] ,'style'=>'display:flex' ])  !!}
                 {{csrf_field()}}
                 <input  type="hidden" name="post_id" value="{{ $post->id }}">
                 <input  id="comment_field" type="text" name="comment" value="{{$comment->comment}}" class="form-control" style="border-radius: 0;">
@@ -186,10 +186,10 @@
                     <div class="replies  col-sm-9">
                       <p class="reply-content ">{{ $reply->reply}} </p>
                       @if($reply->user_id == Auth::user()->id)
-                      <small class="pull-right" > Replied by <a href="/social/public/home">{{ $reply->user['username'] }} </a> </small>
+                      <small class="pull-right" > Replied by <a href="{{route('home')}}">{{ $reply->user['username'] }} </a> </small>
 <br>
                       @else
-                      <small class="pull-right" > Replied  by <a href="/social/public/users/{{$reply->user_id}}">{{ $comment->user['username'] }} </a> </small>
+                      <small class="pull-right" > Replied  by <a href="{{route('users.show',$reply->user_id)}}">{{ $comment->user['username'] }} </a> </small>
 <br>
                       @endif
 
@@ -201,8 +201,8 @@
                          <span  data-editreply="{{$reply->id}}" class="btn btn-warning btn-sm edit-reply">
                          <i  class="fa fa-pencil"></i>
                        </span>
-                       <a class=" btn btn-danger btn-sm" href="#" onclick="document.getElementById('delete').submit()">  <i class="fa fa-trash" >
-                       {!! Form::open(['method' => 'DELETE', 'id' => 'delete', 'route' => ['reply.delete', $reply->id]]) !!}
+                       <a class="btn btn-danger btn-sm" href="#" onclick="document.getElementById('rdelete').submit()">  <i class="fa fa-trash" >
+                       {!! Form::open(['method' => 'DELETE', 'id' => 'rdelete', 'route' => ['replies.delete', $reply->id]]) !!}
                        {!! Form::close() !!}
 
                        </i></a>
@@ -217,7 +217,7 @@
                   </div>
 
                   <div  id="{{$reply->id}}" class="edit-reply-form col-sm-10">
-                      {!! Form::open(['method'=>'PUT' ,'route' => ['reply.update', $reply->id] ,'style'=>'display:flex' ])  !!}
+                      {!! Form::open(['method'=>'PUT' ,'route' => ['replies.update', $reply->id] ,'style'=>'display:flex' ])  !!}
                         {{csrf_field()}}
                         <input  type="hidden" name="post_id" value="{{ $post->id }}">
                         <input  id="comment_field" type="text" name="reply" value="{{$reply->reply}}" class="form-control" style="border-radius: 0;">
@@ -238,7 +238,7 @@
                         <br><br>
                         <div class="col-sm-10">
 
-                           <form action="{{ url('/reply') }}" method="POST" style="display: flex;">
+                           <form action="{{ route('replies.store') }}" method="POST" style="display: flex;">
                               {{ csrf_field() }}
                               <input type="text" name="reply" placeholder="reply on post" class="form-control" style="border-radius: 0;">
                               <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -259,7 +259,7 @@
             @if (Auth::check())
                 <div class="panel panel-default" style="margin: 0; border-radius: 0;">
                   <div class="panel-body">
-                      <form method="POST" action="{{ url('/comment') }}"   style="display: flex;">
+                      <form method="POST" action="{{ route('comments.store') }}"   style="display: flex;">
 
 
 
@@ -295,10 +295,6 @@ $('.edit-comment').on('click',function(){
   console.log($(this).data('editcomment'));
   $('#'+$(this).data('editcomment')).slideToggle();
 });
-
-
-
-
 
 </script>
 

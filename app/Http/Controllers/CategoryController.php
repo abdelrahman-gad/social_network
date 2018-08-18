@@ -71,13 +71,13 @@ class CategoryController extends Controller
 
 public function showAll($id)
 {
- $category=Category::all()->where('id','=',$id)->first();
-if($category != null)
-{
-    $posts=Post::all()->where('category_id','=',$category->id)->sortByDesc('id');
-    return view('category.showAll')->withPosts($posts);
-}
-return redirect('/post');
+    $category=Category::all()->where('id','=',$id)->first();
+    if($category != null)
+    {
+        $posts=Post::all()->where('category_id','=',$category->id)->sortByDesc('id');
+        return view('category.showAll')->withPosts($posts);
+    }
+    return redirect('/post');
 }
 
 
